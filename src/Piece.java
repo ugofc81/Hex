@@ -18,8 +18,8 @@ public class Piece {
     public Piece transpose() {
         List<Hex> transp = new ArrayList<>();
         int length = this.list.size();
-        for(int i = 0; i < length; i++) {
-            transp.add(this.list.get(i).transpose());
+        for (Hex hex : this.list) {
+            transp.add(hex.transpose());
         }
         return new Piece(transp);
     }
@@ -27,17 +27,17 @@ public class Piece {
     public Piece traslate(Hex o) {
         List<Hex> transp = new ArrayList<>();
         int length = this.list.size();
-        for(int i = 0; i < length; i++) {
-            transp.add(this.list.get(i).add(o));
+        for (Hex hex : this.list) {
+            transp.add(hex.add(o));
         }
         return new Piece(transp);
     }
 
     public int maxRadius() {
         int result = 0;
-        for (int i = 0; i < this.list.size(); i ++) {
-            if (this.list.get(i).module() > result) {
-                result = this.list.get(i).module();
+        for (Hex hex : this.list) {
+            if (hex.module() > result) {
+                result = hex.module();
             }
         }
         return result;
@@ -46,8 +46,8 @@ public class Piece {
     public Piece rotateCw() {
         List<Hex> transp = new ArrayList<>();
         int length = this.list.size();
-        for(int i = 0; i < length; i++) {
-            transp.add(this.list.get(i).rotateCW().rotateCW());
+        for (Hex hex : this.list) {
+            transp.add(hex.rotateCW().rotateCW());
         }
         return new Piece(transp);
     }
@@ -55,8 +55,8 @@ public class Piece {
     public Piece rotateCcw() {
         List<Hex> transp = new ArrayList<>();
         int length = this.list.size();
-        for(int i = 0; i < length; i++) {
-            transp.add(this.list.get(i).rotateCCW().rotateCCW());
+        for (Hex hex : this.list) {
+            transp.add(hex.rotateCCW().rotateCCW());
         }
         return new Piece(transp);
     }
