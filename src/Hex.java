@@ -7,7 +7,7 @@ import java.util.List;
  * Represents a single hex cell using cubic coordinates.
  * Invariant: q + r + s == 0
  */
-public record Hex(int q, int r, int s) {
+public record Hex(int q, int r, int s) implements Comparable<Hex> {
 
     // ── Construction ──────────────────────────────────────────────────────────
 
@@ -28,6 +28,17 @@ public record Hex(int q, int r, int s) {
     }
 
     public static final Hex ORIGIN = Hex.of(0, 0);
+
+    @Override
+    public int compareTo(Hex o) {
+        if (this.q != o.q) {
+            return o.q - this.q;
+        }
+        if (this.r != o.r) {
+            return o.r - this.r;
+        }
+        return o.s - this.s;
+    }
 
     // ── Directions & neighbours ───────────────────────────────────────────────
 
@@ -111,6 +122,8 @@ public record Hex(int q, int r, int s) {
         }
         return Collections.unmodifiableList(line);
     }
+
+
 
     // ── Range queries ─────────────────────────────────────────────────────────
 

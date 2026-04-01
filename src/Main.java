@@ -1,3 +1,4 @@
+import javax.swing.text.Position;
 import java.util.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -103,21 +104,54 @@ public class Main {
         listM.add(Hex.of(1,-1));
         listM.add(Hex.of(-1,-1));
         boolean listMTransposable = true;
+
+        Collections.sort(listA);
+        Collections.sort(listB);
+        Collections.sort(listC);
+        Collections.sort(listD);
+        Collections.sort(listE);
+        Collections.sort(listG);
+        Collections.sort(listH);
+        Collections.sort(listI);
+        Collections.sort(listJ);
+        Collections.sort(listK);
+        Collections.sort(listL);
+        Collections.sort(listM);
+
         int RADIUS = 4;
         HexBoard<String> boardAll = HexBoard.hexagonal(RADIUS, "plains");
 
-        List<Piece> positionsA = Positions.getPositions(listA, listATransposable, boardAll, RADIUS);
-        List<Piece> positionsB = Positions.getPositions(listB, listBTransposable, boardAll, RADIUS);
-        List<Piece> positionsC = Positions.getPositions(listC, listCTransposable, boardAll, RADIUS);
-        List<Piece> positionsD = Positions.getPositions(listD, listDTransposable, boardAll, RADIUS);
-        List<Piece> positionsE = Positions.getPositions(listE, listETransposable, boardAll, RADIUS);
-        List<Piece> positionsG = Positions.getPositions(listG, listGTransposable, boardAll, RADIUS);
-        List<Piece> positionsH = Positions.getPositions(listH, listHTransposable, boardAll, RADIUS);
-        List<Piece> positionsI = Positions.getPositions(listI, listITransposable, boardAll, RADIUS);
-        List<Piece> positionsJ = Positions.getPositions(listJ, listJTransposable, boardAll, RADIUS);
-        List<Piece> positionsK = Positions.getPositions(listK, listKTransposable, boardAll, RADIUS);
-        List<Piece> positionsL = Positions.getPositions(listL, listLTransposable, boardAll, RADIUS);
-        List<Piece> positionsM = Positions.getPositions(listM, listMTransposable, boardAll, RADIUS);
+        Piece forbiddenA0 = new Piece(listA).traslate(Hex.of(-3, 3));
+        List<Piece> forbiddenA = Positions.getStar(forbiddenA0);
+        Piece forbiddenB0 = new Piece(listB).traslate(Hex.of(-2, 0));
+        List<Piece> forbiddenB = Positions.getStar(forbiddenB0);
+        Piece forbiddenC0 = new Piece(listC).traslate(Hex.of(-3, 2));
+        List<Piece> forbiddenC = Positions.getStar(forbiddenC0);
+        Piece forbiddenD0 = new Piece(listD).traslate(Hex.of(3, -2));
+        List<Piece> forbiddenD = Positions.getStar(forbiddenD0);
+        Piece forbiddenH0 = new Piece(listH).traslate(Hex.of(-3, 3));
+        List<Piece> forbiddenH = Positions.getStar(forbiddenH0);
+        Piece forbiddenI0 = new Piece(listI).traslate(Hex.of(3, -3));
+        List<Piece> forbiddenI = Positions.getStar(forbiddenI0);
+        Piece forbiddenJ0 = new Piece(listJ).traslate(Hex.of(-1, 3));
+        List<Piece> forbiddenJ = Positions.getStar(forbiddenJ0);
+        Piece forbiddenK0 = new Piece(listK).traslate(Hex.of(0, -3));
+        List<Piece> forbiddenK = Positions.getStar(forbiddenK0);
+        Piece forbiddenL0 = new Piece(listL).traslate(Hex.of(-3, 3));
+        List<Piece> forbiddenL = Positions.getStar(forbiddenL0);
+
+        List<Piece> positionsA = Positions.getPositions(listA, listATransposable, boardAll, forbiddenA, RADIUS);
+        List<Piece> positionsB = Positions.getPositions(listB, listBTransposable, boardAll, forbiddenB, RADIUS);
+        List<Piece> positionsC = Positions.getPositions(listC, listCTransposable, boardAll, forbiddenC, RADIUS);
+        List<Piece> positionsD = Positions.getPositions(listD, listDTransposable, boardAll, forbiddenD, RADIUS);
+        List<Piece> positionsE = Positions.getPositions(listE, listETransposable, boardAll, forbiddenA, RADIUS);
+        List<Piece> positionsG = Positions.getPositions(listG, listGTransposable, boardAll, forbiddenA, RADIUS);
+        List<Piece> positionsH = Positions.getPositions(listH, listHTransposable, boardAll, forbiddenH, RADIUS);
+        List<Piece> positionsI = Positions.getPositions(listI, listITransposable, boardAll, forbiddenI, RADIUS);
+        List<Piece> positionsJ = Positions.getPositions(listJ, listJTransposable, boardAll, forbiddenJ, RADIUS);
+        List<Piece> positionsK = Positions.getPositions(listK, listKTransposable, boardAll, forbiddenK, RADIUS);
+        List<Piece> positionsL = Positions.getPositions(listL, listLTransposable, boardAll, forbiddenL, RADIUS);
+        List<Piece> positionsM = Positions.getPositions(listM, listMTransposable, boardAll, forbiddenA, RADIUS);
 
         System.out.println(new Date().toInstant().toString());
         System.out.println(positionsA);
@@ -289,7 +323,25 @@ public class Main {
                                                     ) {
                                                         continue;
                                                     }
-                                                    System.out.println("undici pezzi " + i + " " + j + " " + k + " " + l + " " + m + " " + n + " " + o + " " + p + " " + q + " " + r + " " + s);
+
+                                                    for(int t = 0; t < positionsM.size(); t++){
+                                                        if (
+                                                                positionsM.get(t).collides(positionsA.get(i)) ||
+                                                                        positionsM.get(t).collides(positionsB.get(j)) ||
+                                                                        positionsM.get(t).collides(positionsC.get(k)) ||
+                                                                        positionsM.get(t).collides(positionsD.get(l)) ||
+                                                                        positionsM.get(t).collides(positionsE.get(m)) ||
+                                                                        positionsM.get(t).collides(positionsG.get(n)) ||
+                                                                        positionsM.get(t).collides(positionsH.get(o)) ||
+                                                                        positionsM.get(t).collides(positionsI.get(p)) ||
+                                                                        positionsM.get(t).collides(positionsJ.get(q)) ||
+                                                                        positionsM.get(t).collides(positionsK.get(r)) ||
+                                                                        positionsM.get(t).collides(positionsL.get(s))
+                                                        ) {
+                                                            continue;
+                                                        }
+                                                        System.out.println("dodici pezzi " + positionsA.get(i) + " " + positionsB.get(j) + " " + positionsC.get(k) + " " + positionsD.get(l) + " " + positionsE.get(m) + " " + positionsG.get(n) + " " + positionsH.get(o) + " " + positionsI.get(p) + " " + positionsJ.get(q) + " " + positionsK.get(r) + " " + positionsL.get(s) + " " + positionsM.get(t));
+                                                    }
                                                 }                                                         }
                                         }
                                     }

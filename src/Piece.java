@@ -1,10 +1,13 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 public class Piece {
     private List<Hex> list;
 
     public Piece(List<Hex> l) {
+        Collections.sort(l);
         this.list = l;
     }
 
@@ -21,6 +24,7 @@ public class Piece {
         for (Hex hex : this.list) {
             transp.add(hex.transpose());
         }
+        Collections.sort(transp);
         return new Piece(transp);
     }
 
@@ -30,6 +34,7 @@ public class Piece {
         for (Hex hex : this.list) {
             transp.add(hex.add(o));
         }
+        Collections.sort(transp);
         return new Piece(transp);
     }
 
@@ -49,6 +54,7 @@ public class Piece {
         for (Hex hex : this.list) {
             transp.add(hex.rotateCW().rotateCW());
         }
+        Collections.sort(transp);
         return new Piece(transp);
     }
 
@@ -58,6 +64,7 @@ public class Piece {
         for (Hex hex : this.list) {
             transp.add(hex.rotateCCW().rotateCCW());
         }
+        Collections.sort(transp);
         return new Piece(transp);
     }
 
@@ -66,6 +73,24 @@ public class Piece {
             for (int j = 0; j < p.list.size(); j++) {
                 if (this.list.get(i).equals(p.list.get(j)))
                     return true;
+            }
+        }
+        return false;
+    }
+
+    public boolean coincides(Piece p) {
+        for (int i = 0; i < this.list.size(); i++) {
+            if (!this.list.get(i).equals(p.list.get(i))) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    public boolean isContainedIn(List<Piece> piecesList) {
+        for (int i = 0; i < piecesList.size(); i++) {
+            if (piecesList.get(i).coincides(this)) {
+                return true;
             }
         }
         return false;
