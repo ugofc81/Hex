@@ -1,7 +1,10 @@
+package main.java.puzzle;
+
+import main.java.hex.Hex;
+
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Objects;
 
 public class Piece {
     private List<Hex> list;
@@ -13,14 +16,13 @@ public class Piece {
 
     @Override
     public String toString() {
-        return "Piece{" +
+        return "puzzle.Piece{" +
                 "list=" + list +
                 '}';
     }
 
     public Piece transpose() {
         List<Hex> transp = new ArrayList<>();
-        int length = this.list.size();
         for (Hex hex : this.list) {
             transp.add(hex.transpose());
         }
@@ -30,7 +32,6 @@ public class Piece {
 
     public Piece traslate(Hex o) {
         List<Hex> transp = new ArrayList<>();
-        int length = this.list.size();
         for (Hex hex : this.list) {
             transp.add(hex.add(o));
         }
@@ -94,5 +95,9 @@ public class Piece {
             }
         }
         return false;
+    }
+
+    public List<Hex> getList() {
+        return list;
     }
 }

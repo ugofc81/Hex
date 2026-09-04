@@ -1,10 +1,9 @@
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
+package main.java.hex;
+
+import java.util.*;
 
 /**
- * Represents a single hex cell using cubic coordinates.
+ * Represents a single main.java.hex cell using cubic coordinates.
  * Invariant: q + r + s == 0
  */
 public record Hex(int q, int r, int s) implements Comparable<Hex> {
@@ -16,10 +15,6 @@ public record Hex(int q, int r, int s) implements Comparable<Hex> {
             throw new IllegalArgumentException(
                     "Cubic coordinates must satisfy q + r + s = 0, got: %d+%d+%d=%d"
                             .formatted(q, r, s, q + r + s));
-    }
-
-    public boolean equals(Hex h) {
-        return (q == h.q && r == h.r);
     }
 
     /** Convenience factory – derives s automatically. */
@@ -73,26 +68,7 @@ public record Hex(int q, int r, int s) implements Comparable<Hex> {
     public Hex scale(int k)    { return new Hex(q*k,   r*k,   s*k);   }
     public Hex negate()        { return scale(-1); }
     public int module() {
-        int result = 0;
-        if (q > result) {
-            result = q;
-        }
-        if (r > result) {
-            result = r;
-        }
-        if (s > result) {
-            result = s;
-        }
-        if (-q > result) {
-            result = -q;
-        }
-        if (-r > result) {
-            result = -r;
-        }
-        if (-s > result) {
-            result = -s;
-        }
-        return result;
+        return Math.max(Math.max(Math.abs(q), Math.abs(r)), Math.abs(s));
     }
 
     // ── Rotation (around origin) ──────────────────────────────────────────────
@@ -105,7 +81,7 @@ public record Hex(int q, int r, int s) implements Comparable<Hex> {
 
     // ── Distance & line-of-sight ──────────────────────────────────────────────
 
-    /** Hex-grid distance (number of steps) to another cell. */
+    /** main.java.hex.Hex-grid distance (number of steps) to another cell. */
     public int distanceTo(Hex o) {
         Hex d = subtract(o);
         return (Math.abs(d.q) + Math.abs(d.r) + Math.abs(d.s)) / 2;
@@ -127,7 +103,7 @@ public record Hex(int q, int r, int s) implements Comparable<Hex> {
 
     // ── Range queries ─────────────────────────────────────────────────────────
 
-    /** All hexes within Manhattan-hex distance {@code radius} of this cell. */
+    /** All hexes within Manhattan-main.java.hex distance {@code radius} of this cell. */
     public List<Hex> range(int radius) {
         List<Hex> results = new ArrayList<>();
         for (int dq = -radius; dq <= radius; dq++) {
@@ -153,6 +129,23 @@ public record Hex(int q, int r, int s) implements Comparable<Hex> {
         return Collections.unmodifiableList(results);
     }
 
+    public boolean borders(Hex h) {
+        int dq = this.q - h.q;
+        int dr = this.r - h.r;
+        int ds = this.s - h.s;
+
+        return ((dq == 0 || dr == 0 || ds == 0) && Math.max(Math.abs(dq), Math.max(Math.abs(dr), Math.abs(ds))) == 1);
+    }
+
+    public boolean isInList(List<Hex> list) {
+        for (Hex hex : list) {
+            if (this.equals(hex)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // ── Helpers ───────────────────────────────────────────────────────────────
 
     private static Hex lerpRound(Hex a, Hex b, double t) {
@@ -162,7 +155,7 @@ public record Hex(int q, int r, int s) implements Comparable<Hex> {
         return roundCube(fq, fr, fs);
     }
 
-    /** Rounds fractional cubic coordinates to the nearest valid hex. */
+    /** Rounds fractional cubic coordinates to the nearest valid main.java.hex. */
     public static Hex roundCube(double fq, double fr, double fs) {
         long q = Math.round(fq), r = Math.round(fr), s = Math.round(fs);
         double dq = Math.abs(q - fq), dr = Math.abs(r - fr), ds = Math.abs(s - fs);
@@ -170,5 +163,40 @@ public record Hex(int q, int r, int s) implements Comparable<Hex> {
         else if (dr > ds)       r = -q - s;
         else                    s = -q - r;
         return new Hex((int) q, (int) r, (int) s);
+    }
+
+    /**
+     * Partitions a collection of hexes into topologically separate groups,
+     * where two hexes belong to the same group if they are connected
+     * transitively through shared edges.
+     *
+     * @param hexes the hexes to partition
+     * @return a list of connected components, each as an unmodifiable set
+     */
+    public static List<Set<Hex>> connectedComponents(Collection<Hex> hexes) {
+        Set<Hex> unvisited = new HashSet<>(hexes);
+        List<Set<Hex>> components = new ArrayList<>();
+
+        while (!unvisited.isEmpty()) {
+            Hex seed = unvisited.iterator().next();
+
+            Set<Hex> component = new HashSet<>();
+            Deque<Hex> queue = new ArrayDeque<>();
+            queue.add(seed);
+            component.add(seed);
+
+            while (!queue.isEmpty()) {
+                Hex cur = queue.poll();
+                for (Hex nb : cur.neighbors()) {
+                    if (unvisited.contains(nb) && component.add(nb))
+                        queue.add(nb);
+                }
+            }
+
+            unvisited.removeAll(component);
+            components.add(Collections.unmodifiableSet(component));
+        }
+
+        return Collections.unmodifiableList(components);
     }
 }

@@ -1,8 +1,10 @@
+package main.java.hex;
+
 import java.util.*;
 import java.util.function.Predicate;
 
 /**
- * A finite hexagonal board that maps Hex coordinates to tile values.
+ * A finite hexagonal board that maps main.java.hex.Hex coordinates to tile values.
  *
  * @param <T> the type of value stored in each cell (use Void / null for presence-only boards)
  */
@@ -45,7 +47,7 @@ public class HexBoard<T> {
     public Set<Hex> hexes()                   { return Collections.unmodifiableSet(cells.keySet()); }
     public int size()                         { return cells.size(); }
 
-    /** Returns all occupied neighbours of {@code hex} that are on the board. */
+    /** Returns all occupied neighbours of {@code main.java.hex} that are on the board. */
     public List<Hex> neighbors(Hex hex) {
         return hex.neighbors().stream()
                 .filter(this::contains)
@@ -100,6 +102,6 @@ public class HexBoard<T> {
 
     @Override
     public String toString() {
-        return "HexBoard{size=" + size() + ", hexes=" + cells.keySet() + "}";
+        return "main.java.hex.HexBoard{size=" + size() + ", hexes=" + cells.keySet() + "}";
     }
 }

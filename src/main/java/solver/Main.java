@@ -1,4 +1,13 @@
-import javax.swing.text.Position;
+package main.java.solver;
+
+import main.java.hex.Hex;
+import main.java.hex.HexBoard;
+import main.java.puzzle.Orbit;
+import main.java.puzzle.Piece;
+import main.java.puzzle.PieceLibrary;
+import main.java.puzzle.SymmetryBreaker;
+import main.java.puzzle.IslandChecker;
+
 import java.util.*;
 
 //TIP To <b>Run</b> code, press <shortcut actionId="Run"/> or
@@ -9,149 +18,53 @@ public class Main {
         // to see how IntelliJ IDEA suggests fixing it.
         System.out.printf("Hello and welcome!");
 
-        List<Hex> listA = new ArrayList<>();
-        listA.add(Hex.of(0,0));
-        listA.add(Hex.of(-1,0));
-        listA.add(Hex.of(1,0));
-        listA.add(Hex.of(2,-1));
-        listA.add(Hex.of(1,1));
-        boolean listATransposable = false;
-
-        List<Hex> listB = new ArrayList<>();
-        listB.add(Hex.of(0,0));
-        listB.add(Hex.of(0,-1));
-        listB.add(Hex.of(0,-2));
-        listB.add(Hex.of(-1,1));
-        listB.add(Hex.of(-2,2));
-        boolean listBTransposable = false;
-
-        List<Hex> listC = new ArrayList<>();
-        listC.add(Hex.of(0,0));
-        listC.add(Hex.of(-1,0));
-        listC.add(Hex.of(1,0));
-        listC.add(Hex.of(0,1));
-        listC.add(Hex.of(0,2));
-        boolean listCTransposable = true;
-
-        List<Hex> listD = new ArrayList<>();
-        listD.add(Hex.of(0,0));
-        listD.add(Hex.of(-1,0));
-        listD.add(Hex.of(1,0));
-        listD.add(Hex.of(0,-1));
-        listD.add(Hex.of(0,-2));
-        boolean listDTransposable = true;
-
-        List<Hex> listE = new ArrayList<>();
-        listE.add(Hex.of(0,0));
-        listE.add(Hex.of(-1,0));
-        listE.add(Hex.of(1,0));
-        listE.add(Hex.of(1,-1));
-        listE.add(Hex.of(2,-1));
-        boolean listETransposable = true;
-
-        List<Hex> listG = new ArrayList<>();
-        listG.add(Hex.of(0,0));
-        listG.add(Hex.of(-1,0));
-        listG.add(Hex.of(1,0));
-        listG.add(Hex.of(-1,1));
-        listG.add(Hex.of(-2,1));
-        boolean listGTransposable = true;
-
-        List<Hex> listH = new ArrayList<>();
-        listH.add(Hex.of(0,0));
-        listH.add(Hex.of(-1,0));
-        listH.add(Hex.of(1,0));
-        listH.add(Hex.of(1,1));
-        listH.add(Hex.of(0,-1));
-        boolean listHTransposable = true;
-
-        List<Hex> listI = new ArrayList<>();
-        listI.add(Hex.of(0,0));
-        listI.add(Hex.of(-1,0));
-        listI.add(Hex.of(1,0));
-        listI.add(Hex.of(0,1));
-        listI.add(Hex.of(-1,-1));
-        boolean listITransposable = true;
-
-        List<Hex> listJ = new ArrayList<>();
-        listJ.add(Hex.of(0,0));
-        listJ.add(Hex.of(-1,0));
-        listJ.add(Hex.of(1,0));
-        listJ.add(Hex.of(2,0));
-        listJ.add(Hex.of(-2,1));
-        boolean listJTransposable = true;
-
-        List<Hex> listK = new ArrayList<>();
-        listK.add(Hex.of(0,0));
-        listK.add(Hex.of(-1,0));
-        listK.add(Hex.of(1,0));
-        listK.add(Hex.of(2,-1));
-        listK.add(Hex.of(3,-1));
-        boolean listKTransposable = true;
-
-        List<Hex> listL = new ArrayList<>();
-        listL.add(Hex.of(0,0));
-        listL.add(Hex.of(-1,0));
-        listL.add(Hex.of(1,0));
-        listL.add(Hex.of(2,0));
-        listL.add(Hex.of(1,1));
-        boolean listLTransposable = true;
-
-        List<Hex> listM = new ArrayList<>();
-        listM.add(Hex.of(0,0));
-        listM.add(Hex.of(-1,0));
-        listM.add(Hex.of(1,0));
-        listM.add(Hex.of(1,-1));
-        listM.add(Hex.of(-1,-1));
-        boolean listMTransposable = true;
-
-        Collections.sort(listA);
-        Collections.sort(listB);
-        Collections.sort(listC);
-        Collections.sort(listD);
-        Collections.sort(listE);
-        Collections.sort(listG);
-        Collections.sort(listH);
-        Collections.sort(listI);
-        Collections.sort(listJ);
-        Collections.sort(listK);
-        Collections.sort(listL);
-        Collections.sort(listM);
+        Collections.sort(PieceLibrary.listA);
+        Collections.sort(PieceLibrary.listB);
+        Collections.sort(PieceLibrary.listC);
+        Collections.sort(PieceLibrary.listD);
+        Collections.sort(PieceLibrary.listE);
+        Collections.sort(PieceLibrary.listG);
+        Collections.sort(PieceLibrary.listH);
+        Collections.sort(PieceLibrary.listI);
+        Collections.sort(PieceLibrary.listJ);
+        Collections.sort(PieceLibrary.listK);
+        Collections.sort(PieceLibrary.listL);
+        Collections.sort(PieceLibrary.listM);
 
         int RADIUS = 4;
         HexBoard<String> boardAll = HexBoard.hexagonal(RADIUS, "plains");
 
-        Piece forbiddenA0 = new Piece(listA).traslate(Hex.of(-3, 3));
-        List<Piece> forbiddenA = Positions.getStar(forbiddenA0);
-        Piece forbiddenB0 = new Piece(listB).traslate(Hex.of(-2, 0));
-        List<Piece> forbiddenB = Positions.getStar(forbiddenB0);
-        Piece forbiddenC0 = new Piece(listC).traslate(Hex.of(-3, 2));
-        List<Piece> forbiddenC = Positions.getStar(forbiddenC0);
-        Piece forbiddenD0 = new Piece(listD).traslate(Hex.of(3, -2));
-        List<Piece> forbiddenD = Positions.getStar(forbiddenD0);
-        Piece forbiddenH0 = new Piece(listH).traslate(Hex.of(-3, 3));
-        List<Piece> forbiddenH = Positions.getStar(forbiddenH0);
-        Piece forbiddenI0 = new Piece(listI).traslate(Hex.of(3, -3));
-        List<Piece> forbiddenI = Positions.getStar(forbiddenI0);
-        Piece forbiddenJ0 = new Piece(listJ).traslate(Hex.of(-1, 3));
-        List<Piece> forbiddenJ = Positions.getStar(forbiddenJ0);
-        Piece forbiddenK0 = new Piece(listK).traslate(Hex.of(0, -3));
-        List<Piece> forbiddenK = Positions.getStar(forbiddenK0);
-        Piece forbiddenL0 = new Piece(listL).traslate(Hex.of(-3, 3));
-        List<Piece> forbiddenL = Positions.getStar(forbiddenL0);
+        Piece forbiddenA0 = new Piece(PieceLibrary.listA).traslate(Hex.of(-3, 3));
+        List<Piece> forbiddenA = SymmetryBreaker.getStar(forbiddenA0);
+        Piece forbiddenB0 = new Piece(PieceLibrary.listB).traslate(Hex.of(-2, 0));
+        List<Piece> forbiddenB = SymmetryBreaker.getStar(forbiddenB0);
+        Piece forbiddenC0 = new Piece(PieceLibrary.listC).traslate(Hex.of(-3, 2));
+        List<Piece> forbiddenC = SymmetryBreaker.getStar(forbiddenC0);
+        Piece forbiddenD0 = new Piece(PieceLibrary.listD).traslate(Hex.of(3, -2));
+        List<Piece> forbiddenD = SymmetryBreaker.getStar(forbiddenD0);
+        Piece forbiddenH0 = new Piece(PieceLibrary.listH).traslate(Hex.of(-3, 3));
+        List<Piece> forbiddenH = SymmetryBreaker.getStar(forbiddenH0);
+        Piece forbiddenI0 = new Piece(PieceLibrary.listI).traslate(Hex.of(3, -3));
+        List<Piece> forbiddenI = SymmetryBreaker.getStar(forbiddenI0);
+        Piece forbiddenJ0 = new Piece(PieceLibrary.listJ).traslate(Hex.of(-1, 3));
+        List<Piece> forbiddenJ = SymmetryBreaker.getStar(forbiddenJ0);
+        Piece forbiddenK0 = new Piece(PieceLibrary.listK).traslate(Hex.of(0, -3));
+        List<Piece> forbiddenK = SymmetryBreaker.getStar(forbiddenK0);
+        Piece forbiddenL0 = new Piece(PieceLibrary.listL).traslate(Hex.of(-3, 3));
+        List<Piece> forbiddenL = SymmetryBreaker.getStar(forbiddenL0);
 
-        List<Piece> positionsA = Positions.getPositions(listA, listATransposable, boardAll, forbiddenA, RADIUS);
-        List<Piece> positionsB = Positions.getPositions(listB, listBTransposable, boardAll, forbiddenB, RADIUS);
-        List<Piece> positionsC = Positions.getPositions(listC, listCTransposable, boardAll, forbiddenC, RADIUS);
-        List<Piece> positionsD = Positions.getPositions(listD, listDTransposable, boardAll, forbiddenD, RADIUS);
-        List<Piece> positionsE = Positions.getPositions(listE, listETransposable, boardAll, forbiddenA, RADIUS);
-        List<Piece> positionsG = Positions.getPositions(listG, listGTransposable, boardAll, forbiddenA, RADIUS);
-        List<Piece> positionsH = Positions.getPositions(listH, listHTransposable, boardAll, forbiddenH, RADIUS);
-        List<Piece> positionsI = Positions.getPositions(listI, listITransposable, boardAll, forbiddenI, RADIUS);
-        List<Piece> positionsJ = Positions.getPositions(listJ, listJTransposable, boardAll, forbiddenJ, RADIUS);
-        List<Piece> positionsK = Positions.getPositions(listK, listKTransposable, boardAll, forbiddenK, RADIUS);
-        List<Piece> positionsL = Positions.getPositions(listL, listLTransposable, boardAll, forbiddenL, RADIUS);
-        List<Piece> positionsM = Positions.getPositions(listM, listMTransposable, boardAll, forbiddenA, RADIUS);
+        List<Piece> positionsA = Orbit.getPositions(PieceLibrary.listA, PieceLibrary.listATransposable, boardAll, forbiddenA, RADIUS);
+        List<Piece> positionsB = Orbit.getPositions(PieceLibrary.listB, PieceLibrary.listBTransposable, boardAll, forbiddenB, RADIUS);
+        List<Piece> positionsC = Orbit.getPositions(PieceLibrary.listC, PieceLibrary.listCTransposable, boardAll, forbiddenC, RADIUS);
+        List<Piece> positionsD = Orbit.getPositions(PieceLibrary.listD, PieceLibrary.listDTransposable, boardAll, forbiddenD, RADIUS);
+        List<Piece> positionsE = Orbit.getPositions(PieceLibrary.listE, PieceLibrary.listETransposable, boardAll, forbiddenA, RADIUS);
+        List<Piece> positionsG = Orbit.getPositions(PieceLibrary.listG, PieceLibrary.listGTransposable, boardAll, forbiddenA, RADIUS);
+        List<Piece> positionsH = Orbit.getPositions(PieceLibrary.listH, PieceLibrary.listHTransposable, boardAll, forbiddenH, RADIUS);
+        List<Piece> positionsI = Orbit.getPositions(PieceLibrary.listI, PieceLibrary.listITransposable, boardAll, forbiddenI, RADIUS);
+        List<Piece> positionsJ = Orbit.getPositions(PieceLibrary.listJ, PieceLibrary.listJTransposable, boardAll, forbiddenJ, RADIUS);
+        List<Piece> positionsK = Orbit.getPositions(PieceLibrary.listK, PieceLibrary.listKTransposable, boardAll, forbiddenK, RADIUS);
+        List<Piece> positionsL = Orbit.getPositions(PieceLibrary.listL, PieceLibrary.listLTransposable, boardAll, forbiddenL, RADIUS);
+        List<Piece> positionsM = Orbit.getPositions(PieceLibrary.listM, PieceLibrary.listMTransposable, boardAll, forbiddenA, RADIUS);
 
         System.out.println(new Date().toInstant().toString());
         System.out.println(positionsA);
@@ -192,24 +105,46 @@ public class Main {
         System.out.println(positionsL.size());
         System.out.println(positionsM.size());
 
-        for (int i = 0; i < positionsA.size(); i++) {
-            for(int j = 0; j < positionsB.size(); j++){
+        List<Piece> occupation = new ArrayList<>();
+
+        for(int i = 0; i < positionsA.size(); i++) {
+            occupation.add(positionsA.get(i));
+            for (int j = 0; j < positionsB.size(); j++){
                 if (positionsB.get(j).collides(positionsA.get(i))){
                     continue;
                 }
+                occupation.add(positionsB.get(j));
+                if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                    occupation.remove(positionsB.get(j));
+                    continue;
+                }
+
                 for(int k = 0; k < positionsC.size(); k++){
                     if (
-                            positionsC.get(k).collides(positionsA.get(i))
-                            || positionsC.get(k).collides(positionsB.get(j))
+                            positionsC.get(k).collides(positionsA.get(i)) ||
+                                    positionsC.get(k).collides(positionsB.get(j))
                     ){
                         continue;
                     }
+
+                    occupation.add(positionsC.get(k));
+                    if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                        occupation.remove(positionsC.get(k));
+                        continue;
+                    }
+
                     for(int l = 0; l < positionsD.size(); l++){
                         if (
                                 positionsD.get(l).collides(positionsA.get(i)) ||
                                         positionsD.get(l).collides(positionsB.get(j)) ||
                                         positionsD.get(l).collides(positionsC.get(k))
                         ){
+                            continue;
+                        }
+
+                        occupation.add(positionsD.get(l));
+                        if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                            occupation.remove(positionsD.get(l));
                             continue;
                         }
 
@@ -223,8 +158,13 @@ public class Main {
                                 continue;
                             }
 
+                            occupation.add(positionsE.get(m));
+                            if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                                occupation.remove(positionsE.get(m));
+                                continue;
+                            }
 
-                            for(int n = 0; n < positionsG.size(); n++){
+                            for (int n = 0; n < positionsG.size(); n++){
                                 if (
                                         positionsG.get(n).collides(positionsA.get(i)) ||
                                                 positionsG.get(n).collides(positionsB.get(j)) ||
@@ -235,7 +175,11 @@ public class Main {
                                     continue;
                                 }
 
-
+                                occupation.add(positionsG.get(n));
+                                if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                                    occupation.remove(positionsG.get(n));
+                                    continue;
+                                }
 
                                 for(int o = 0; o < positionsH.size(); o++){
                                     if (
@@ -249,8 +193,11 @@ public class Main {
                                         continue;
                                     }
 
-
-
+                                    occupation.add(positionsH.get(o));
+                                    if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                                        occupation.remove(positionsH.get(o));
+                                        continue;
+                                    }
 
                                     for(int p = 0; p < positionsI.size(); p++){
                                         if (
@@ -265,9 +212,11 @@ public class Main {
                                             continue;
                                         }
 
-
-
-
+                                        occupation.add(positionsI.get(p));
+                                        if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                                            occupation.remove(positionsI.get(p));
+                                            continue;
+                                        }
 
                                         for(int q = 0; q < positionsJ.size(); q++){
                                             if (
@@ -283,10 +232,11 @@ public class Main {
                                                 continue;
                                             }
 
-
-
-
-
+                                            occupation.add(positionsJ.get(q));
+                                            if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                                                occupation.remove(positionsJ.get(q));
+                                                continue;
+                                            }
 
                                             for(int r = 0; r < positionsK.size(); r++){
                                                 if (
@@ -303,11 +253,6 @@ public class Main {
                                                     continue;
                                                 }
 
-
-
-
-
-
                                                 for(int s = 0; s < positionsL.size(); s++){
                                                     if (
                                                             positionsL.get(s).collides(positionsA.get(i)) ||
@@ -321,6 +266,13 @@ public class Main {
                                                                     positionsL.get(s).collides(positionsJ.get(q)) ||
                                                                     positionsL.get(s).collides(positionsK.get(r))
                                                     ) {
+                                                        continue;
+                                                    }
+
+                                                    occupation.add(positionsL.get(s));
+                                                    if (IslandChecker.illegalIslands(IslandChecker.getIslands(boardAll, occupation))) {
+                                                        System.out.println("illegale con 11, status:" + i + ", " + j + ", " + k + ", " + l + ", " + m + ", " + n + ", " + o + ", " + p + ", " + q + ", " + r + ", " + s);
+                                                        occupation.remove(positionsL.get(s));
                                                         continue;
                                                     }
 
@@ -340,17 +292,30 @@ public class Main {
                                                         ) {
                                                             continue;
                                                         }
+                                                        System.out.println("successful with 12, status:" + i + ", " + j + ", " + k + ", " + l + ", " + m + ", " + n + ", " + o + ", " + p + ", " + q + ", " + r + ", " + s + ", " + t);
                                                         System.out.println("dodici pezzi " + positionsA.get(i) + " " + positionsB.get(j) + " " + positionsC.get(k) + " " + positionsD.get(l) + " " + positionsE.get(m) + " " + positionsG.get(n) + " " + positionsH.get(o) + " " + positionsI.get(p) + " " + positionsJ.get(q) + " " + positionsK.get(r) + " " + positionsL.get(s) + " " + positionsM.get(t));
                                                     }
-                                                }                                                         }
+                                                    occupation.remove(positionsL.get(s));
+                                                }
+                                                occupation.remove(positionsK.get(r));
+                                            }
+                                            occupation.remove(positionsJ.get(q));
                                         }
+                                        occupation.remove(positionsI.get(p));
                                     }
+                                    occupation.remove(positionsH.get(o));
                                 }
+                                occupation.remove(positionsG.get(n));
                             }
+                            occupation.remove(positionsE.get(m));
                         }
+                        occupation.remove(positionsD.get(l));
                     }
+                    occupation.remove(positionsC.get(k));
                 }
+                occupation.remove(positionsB.get(j));
             }
+            occupation.remove(positionsA.get(i));
         }
 
         for (int i = 1; i <= 5; i++) {
